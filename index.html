@@ -43,21 +43,6 @@
       letter-spacing: 0.05em;
     }
 
-    /* Botão instalar app */
-    #btn-instalar {
-      margin-top: 14px;
-      padding: 8px 20px;
-      background: transparent;
-      color: #888;
-      border: 1px solid #2a2a2a;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.78rem;
-      letter-spacing: 0.05em;
-    }
-
-    #btn-instalar:hover { border-color: #444; color: #bbb; }
-
     .box {
       margin-top: 36px;
       background: #161616;
@@ -287,8 +272,9 @@
       <table>
         <tr><td>Água s/ gás</td><td><input type="number" min="0" id="agua-sg"/></td></tr>
         <tr><td>Água c/ gás</td><td><input type="number" min="0" id="agua-cg"/></td></tr>
-        <tr><td>Coca-Cola</td>  <td><input type="number" min="0" id="coca"/></td></tr>
-        <tr><td>Espumante</td>  <td><input type="number" min="0" id="espumante"/></td></tr>
+        <tr><td>Coca-Cola</td><td><input type="number" min="0" id="coca"/></td></tr>
+        <tr><td>Espumante</td><td><input type="number" min="0" id="espumante"/></td></tr>
+        <tr><td>Coco</td><td><input type="number" min="0" id="coco"/></td></tr>
       </table>
       <button onclick="irParaConfirmacao()">Continuar</button>
     </div>
@@ -308,35 +294,36 @@
 
   </div>
 
-<!-- Área de administração -->
-<div id="area-adm" class="hidden">
+  <!-- Área de administração -->
+  <div id="area-adm" class="hidden">
 
-  <div class="adm-box" id="adm-login">
-    <h2>Administração</h2>
-    <input type="text"     id="adm-usuario" placeholder="Usuário"/>
-    <input type="password" id="adm-senha"   placeholder="Senha"/>
-    <div id="adm-erro"></div>
-    <div class="adm-acoes">
-      <button onclick="fazerLogin()">Continuar</button>
-      <button class="btn-secundario" onclick="sairAdm()">Voltar</button>
+    <div class="adm-box" id="adm-login">
+      <h2>Administração</h2>
+      <input type="text"     id="adm-usuario" placeholder="Usuário"/>
+      <input type="password" id="adm-senha"   placeholder="Senha"/>
+      <div id="adm-erro"></div>
+      <div class="adm-acoes">
+        <button onclick="fazerLogin()">Continuar</button>
+        <button class="btn-secundario" onclick="sairAdm()">Voltar</button>
+      </div>
     </div>
-  </div>
 
-  <div class="adm-box hidden" id="adm-painel">
-    <h2>Registros salvos</h2>
-    <div id="adm-lista"></div>
-    <button id="btn-instalar-adm" class="btn-secundario hidden" style="margin-top:20px;" onclick="instalarApp()">⬇ Instalar como aplicativo</button>
-    <button class="btn-secundario" style="margin-top:10px;" onclick="sairAdm()">Sair</button>
-  </div>
+    <div class="adm-box hidden" id="adm-painel">
+      <h2>Registros salvos</h2>
+      <div id="adm-lista"></div>
+      <button id="btn-instalar-adm" class="btn-secundario hidden" style="margin-top:20px;" onclick="instalarApp()">⬇ Instalar como aplicativo</button>
+      <button class="btn-secundario" style="margin-top:10px;" onclick="sairAdm()">Sair</button>
+    </div>
 
-</div>
+  </div>
 
   <script>
     const ITENS = [
       { label: 'Água s/ gás', id: 'agua-sg'  },
       { label: 'Água c/ gás', id: 'agua-cg'  },
       { label: 'Coca-Cola',   id: 'coca'      },
-      { label: 'Espumante',   id: 'espumante' }
+      { label: 'Espumante',   id: 'espumante' },
+      { label: 'Coco',        id: 'coco'      }
     ];
 
     const DIAS_EXPIRACAO = 20;
@@ -538,7 +525,10 @@
     window.addEventListener('beforeinstallprompt', e => {
       e.preventDefault();
       deferredPrompt = e;
-      document.getElementById('btn-instalar').classList.remove('hidden');
+      const btnInstalarAdm = document.getElementById('btn-instalar-adm');
+      if (btnInstalarAdm) {
+        btnInstalarAdm.classList.remove('hidden');
+      }
     });
 
     function instalarApp() {
@@ -546,12 +536,18 @@
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then(() => {
         deferredPrompt = null;
-        document.getElementById('btn-instalar').classList.add('hidden');
+        const btnInstalarAdm = document.getElementById('btn-instalar-adm');
+        if (btnInstalarAdm) {
+          btnInstalarAdm.classList.add('hidden');
+        }
       });
     }
 
     window.addEventListener('appinstalled', () => {
-      document.getElementById('btn-instalar').classList.add('hidden');
+      const btnInstalarAdm = document.getElementById('btn-instalar-adm');
+      if (btnInstalarAdm) {
+        btnInstalarAdm.classList.add('hidden');
+      }
     });
 
     // Registra Service Worker
